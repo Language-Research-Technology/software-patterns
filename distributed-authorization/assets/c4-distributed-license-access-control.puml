@@ -1,0 +1,18 @@
+@startuml C4_Distributed_License_Access_Control
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+
+
+Person(user, "Research User", "Requests access to licensed data or services")
+
+System(repository, "Repository System", "Archival repository / data portal / API")
+System_Ext(authz, "Authentication Server", "Authenticates users and provides identity context (eg AAF or Google)")
+System_Ext(license, "Authorization Server", "Evaluates whether a user holds a required license")
+
+Rel(user, repository, "Requests access to resource")
+Rel(repository, authz, "Redirects for login and receives user identity")
+Rel(repository, license, "Checks if user holds required license for resource")
+Rel(license, authz, "Uses shared identity reference for user matching")
+Rel(repository, user, "Returns resource only when license check passes")
+
+@enduml
