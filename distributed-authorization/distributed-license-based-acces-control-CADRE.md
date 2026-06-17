@@ -75,7 +75,7 @@ Outcome: Your external authN/authZ dependencies are configured.
 
 4. Implement application integration
 
-- Group resources by license (access policy)
+- Group resources by license (access policy).
 - Store or link license metadata to each resource.
 - For each request, authenticate users through CILogon and authorize via CADRE entitlement checks.
 - Support approval paths:
