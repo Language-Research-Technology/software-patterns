@@ -16,7 +16,7 @@
 
 This pattern implements the architectural pattern Distributed license-based access control for data and services.
 
-This implementation is suitable for small ...
+This implementation is suitable for small research projects
 
 The same restrictions on types of data it should be used for apply as for the architectural pattern.
 
@@ -46,36 +46,74 @@ Do not use this pattern:
 
 ### Usage
 
-The main steps in implementing this pattern are to.
+This pattern is implemented in three phases: establish prerequisites, configure external services, then integrate authorization checks into your application.
 
-- Concact your funding body to organise access to CILogon
-- Make contact with the CADRE team and check that they are happy for you to go ahead with an implementation
-- Work with the CADRE team to ensure there is an agreement in place for use of the service
-- Code your application to follow the following protocols:
-  -  Divide up resources by license
-  -  Store or link licenses with resources (in the same storage object if possible for repositories)
-  -  Identify authorization mechanisms availalble
-      1. Automatic approval - by accepting terms/license and fill in form with more details if required
-      2. Approval by a selected handler - An email will be sent to the approver with links to approve your access
+1. Confirm prerequisites
+
+- Confirm your project is in scope for national research infrastructure.
+- Confirm your organisation can use AAF/eduGAIN (or identify an alternative path with your IT team).
+- Confirm there is no existing trusted authorization system that should be reused.
+
+Outcome: You have governance and identity preconditions in place.
+
+2. Engage required service providers
+
+- Contact your funding body to organise access to CILogon.
+- Contact the CADRE team to confirm suitability and onboarding.
+- Put service-use agreements in place with CADRE.
+
+Outcome: You have approved access to both authentication and authorization services.
+
+3. Configure identity and authorization services
+
+- Configure allowed identity providers in CILogon.
+- Generate OIDC clients in CILogon for your application.
+- Request CADRE organisation ownership and API credentials.
+- Define CADRE assets and handlers for each protected resource.
+
+Outcome: Your external authN/authZ dependencies are configured.
+
+4. Implement application integration
+
+- Group resources by license (access policy)
+- Store or link license metadata to each resource.
+- For each request, authenticate users through CILogon and authorize via CADRE entitlement checks.
+- Support approval paths:
+  1. Self-service approval (accept terms and submit required details).
+  2. Handler approval (designated approver receives and processes requests).
+
+Outcome: Access decisions are enforced consistently by external services.
+
+5. Operate and maintain
+
+- Revoke entitlements through the CADRE management interface as needed.
+- Keep handler assignments current for each resource.
+- Plan around CADRE asset immutability when requests already exist.
+
+Outcome: Ongoing access governance remains auditable and maintainable.
 
 #### Preparation
 
-- Is your organisation in AAF/Edugain? If not contact your organisation's IT department
-- Ask the governance body of your project/organisation who is allowed to login to filter the identity providers. CILogon will confugure the allowed identity providers
-- Generate OIDC clients with CILogon
-- Request an Organisation Ownership in CADRE
-- Request an API key to CADRE
-- Create the required assets to control access to your resource
+- Confirm your organisation can use AAF/eduGAIN. If not, work with your IT team on federation onboarding.
+- Confirm with project governance which identity providers should be allowed for login.
+- Ask CILogon to configure those allowed identity providers.
+- Generate OIDC clients in CILogon for your application.
+- Request organisation ownership and API credentials in CADRE.
+- Define CADRE assets needed for your access model:
+  - Catalogue items
+  - Resources
+  - Forms
+  - Workflows
+  - Licenses
 
 #### In use
 
-- Your application will use CILogon as an authentication interface and will use CADRE's API as an authorization interface to check if a logged in user has entitlements to each resource, each user is identified by an ID provided by CILogon.
-- Entitlements can be revoked in CADRE management site
-- Asset management in CADRE are immutable, once there is one request associated with a catalogue item.
-- Each resource can have 1 or many handlers. Identify who is the handler for your resource so the handler can approve or deny an application
-- CADRE is a modified version of [REMS](https://github.com/CSCfi/rems) Resource Entitlement Management System (REMS) is a tool for managing access rights to resources, such as research datasets. CADRE is based on REMS.
-
-
+- Use CILogon for authentication and the CADRE API for authorization checks on each resource request.
+- Identify each user by the stable ID provided by CILogon.
+- Revoke entitlements through the CADRE management interface when access should end.
+- Assign one or more handlers per resource to review and approve or deny access requests.
+- Plan for CADRE immutability rules: assets become effectively immutable once requests are associated with a catalogue item.
+- CADRE is a modified version of the Resource Entitlement Management System ([REMS](https://github.com/CSCfi/rems)), used to manage access rights to resources such as research datasets.
 
 # References
 
